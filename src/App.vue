@@ -3,7 +3,7 @@
       <div class="row">
         <div class="jumbotron">
           <video-player :options="videoOptions" :configs="{ youtube: true }" @player-state-changed="playerStateChanged" ref="myPlayer"></video-player>
-          <p> Duration: {{ duration }} </p>
+          <p> Duration: {{ duration }} </p><p> Current Time {{ currentTime }} </p>
         </div>
         <div class="panel panel-primary">
           <div class="panel-heading">
@@ -43,6 +43,7 @@ export default {
       previousSrc: null,
       isFullscreen: false,
       videoDuration: 0,
+      current: 0,
       hasEnded: false,
       videoOptions: {
         source: [
@@ -67,6 +68,11 @@ export default {
       var date = new Date(null);
       date.setSeconds(this.videoDuration); // specify value for SECONDS here
       return date.toISOString().substr(11, 8);
+    },
+    currentTime(){
+      var date = new Date(null);
+      date.setSeconds(this.current); // specify value for SECONDS here
+      return date.toISOString().substr(11, 8);
     }
   },
 
@@ -74,6 +80,8 @@ export default {
     playerStateChanged(e){
       // We monitor the duration of current video
       this.videoDuration = this.player.duration()
+
+      if (!!e.currentTime) this.current = e.currentTime
 
       // Fullscreen function is not working
       // if(!!this.player.isFullscreen()) this.logs.push('Entered Full Screen');
